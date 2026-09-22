@@ -8,6 +8,9 @@ export default function VolunteerPage() {
   const [leaderboard, setLeaderboard] = useState<any[]>([]);
   const [schoolId, setSchoolId] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<Record<string, string>>({});
+  const [registerFor, setRegisterFor] = useState<{ oppId: string; schoolId: string } | null>(null);
+  const [regForm, setRegForm] = useState({ full_name: "", class_name: "" });
+  const [regError, setRegError] = useState("");
 
   const refresh = async () => {
     const { data: o } = await supabase.rpc("list_opportunities");
@@ -22,18 +25,41 @@ export default function VolunteerPage() {
     if (!id) return;
     const { data, error } = await supabase.rpc("apply_to_opportunity", { p_opportunity: oppId, p_school_id: id });
     if (error) { setStatus({ ...status, [oppId]: "Something went wrong." }); return; }
+
+    if (data === "not_found") {
+      setRegisterFor({ oppId, schoolId: id });
+      setRegForm({ full_name: "", class_name: "" });
+      setRegError("");
+      return;
+    }
+
     const labels: Record<string, string> = {
       ok: "You're in! See you there.", already: "You already applied.",
-      full: "This one's full.", closed: "Applications are closed.", not_found: "No student with that ID.",
+      full: "This one's full.", closed: "Applications are closed.",
     };
     setStatus({ ...status, [oppId]: labels[data as string] ?? data });
     if (data === "ok") refresh();
   };
 
+  const register = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!registerFor) return;
+    setRegError("");
+    const { error } = await supabase.rpc("self_register_student", {
+      p_school_id: registerFor.schoolId, p_full_name: regForm.full_name, p_class_name: regForm.class_name || null,
+    });
+    if (error) { setRegError(error.message); return; } // e.g. bad school ID format, or that ID's already taken
+    // registered — now actually apply them
+    const { data } = await supabase.rpc("apply_to_opportunity", { p_opportunity: registerFor.oppId, p_school_id: registerFor.schoolId });
+    setStatus({ ...status, [registerFor.oppId]: data === "ok" ? "You're in! See you there." : String(data) });
+    setRegisterFor(null);
+    refresh();
+  };
+
   const podium = leaderboard.slice(0, 3);
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-14">
+    <div className="max-w-5xl mx-auto px-4 py-14 relative">
       <h2 className="text-4xl font-black uppercase text-blue-900 dark:text-blue-100">Volunteering</h2>
       <p className="mt-2 text-blue-700 dark:text-blue-300 max-w-xl">
         Enter your school ID to apply. Staff confirm your hours after each event.
@@ -54,7 +80,7 @@ export default function VolunteerPage() {
               <div className="mt-4 flex gap-2">
                 <input placeholder="Your school ID" value={schoolId[o.id] ?? ""}
                   onChange={(e) => setSchoolId({ ...schoolId, [o.id]: e.target.value })}
-                  className="border rounded-lg px-3 py-2 text-sm bg-transparent flex-1" />
+                  className="border rounded-lg px-3 py-2 text-sm bg-transparent flex-1 text-blue-900 dark:text-blue-100 placeholder:text-blue-900/40 dark:placeholder:text-blue-100/40" />
                 <button onClick={() => apply(o.id)} className="bg-blue-900 text-white px-4 py-2 rounded-lg text-sm font-bold">Apply</button>
               </div>
             ) : (
@@ -95,6 +121,27 @@ export default function VolunteerPage() {
           </tbody>
         </table>
       </section>
+
+      {registerFor && (
+        <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center px-4" onClick={() => setRegisterFor(null)}>
+          <div className="card bg-white dark:bg-[#0a0f1e] p-6 w-full max-w-sm" onClick={(e) => e.stopPropagation()}>
+            <h3 className="font-black uppercase text-sm text-blue-900 dark:text-blue-100">We couldn't find that ID</h3>
+            <p className="text-xs text-blue-700/70 dark:text-blue-300/70 mt-1 mb-4">First time volunteering? Set up your record.</p>
+            <form onSubmit={register} className="space-y-3">
+              <input value={registerFor.schoolId} disabled className="w-full border rounded-lg px-3 py-2 bg-blue-50 dark:bg-blue-900/20 text-sm text-blue-700 dark:text-blue-300" />
+              <input placeholder="Full name" required value={regForm.full_name} onChange={(e) => setRegForm({ ...regForm, full_name: e.target.value })}
+                className="w-full border rounded-lg px-3 py-2 bg-transparent text-blue-900 dark:text-blue-100 placeholder:text-blue-900/40 dark:placeholder:text-blue-100/40" />
+              <input placeholder="Grade / class" value={regForm.class_name} onChange={(e) => setRegForm({ ...regForm, class_name: e.target.value })}
+                className="w-full border rounded-lg px-3 py-2 bg-transparent text-blue-900 dark:text-blue-100 placeholder:text-blue-900/40 dark:placeholder:text-blue-100/40" />
+              {regError && <p className="text-xs text-bad">{regError}</p>}
+              <div className="flex gap-2">
+                <button type="button" onClick={() => setRegisterFor(null)} className="flex-1 border rounded-lg py-2 text-sm font-bold">Cancel</button>
+                <button className="flex-1 bg-blue-900 text-white rounded-lg py-2 text-sm font-bold">Save & apply</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
