@@ -3,14 +3,12 @@ import { useAuth } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-export default function ProtectedRoute({ club, children }: { club: string; children: React.ReactNode }) {
-  const { club: loggedInClub } = useAuth();
+export default function ProtectedRoute({ department, children }: { department: string; children: React.ReactNode }) {
+  const { department: loggedIn } = useAuth();
   const router = useRouter();
+  const allowed = loggedIn === department || loggedIn === "council";
 
-  useEffect(() => {
-    if (loggedInClub !== club) router.replace("/restricted");
-  }, [loggedInClub, club, router]);
-
-  if (loggedInClub !== club) return null;
+  useEffect(() => { if (!allowed) router.replace("/restricted"); }, [allowed, router]);
+  if (!allowed) return null;
   return <>{children}</>;
 }
