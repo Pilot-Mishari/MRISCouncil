@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { AuthProvider } from "@/lib/auth";
+import { Analytics } from "@vercel/analytics/next";
 
 const serif = Fraunces({ subsets: ["latin"], variable: "--font-serif", weight: ["500", "600"] });
 const sans = Inter({ subsets: ["latin"], variable: "--font-sans" });
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main className="flex-1">{children}</main>
           <Footer />
         </AuthProvider>
+        <Analytics />
       </body>
     </html>
   );
