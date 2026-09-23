@@ -29,7 +29,7 @@ export default function StudentSearchPicker({ onSelect }: { onSelect: (s: Studen
       school_id: form.school_id.trim(), full_name: form.full_name.trim(),
       class_name: form.class_name.trim() || null,
     }).select().single();
-    if (error) { alert(error.message); return; } // your schema's unique/format checks surface here
+    if (error) { alert(error.message); return; }
     pick(data as Student);
     setShowAdd(false);
   };

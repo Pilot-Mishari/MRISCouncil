@@ -34,8 +34,9 @@ export default function VolunteerPage() {
     }
 
     const labels: Record<string, string> = {
-      ok: "You're in! See you there.", already: "You already applied.",
-      full: "This one's full.", closed: "Applications are closed.",
+      ok: "You're in! See you there.",
+      already: "You already applied.",
+      closed: "Applications are closed.",
     };
     setStatus({ ...status, [oppId]: labels[data as string] ?? data });
     if (data === "ok") refresh();
@@ -48,8 +49,7 @@ export default function VolunteerPage() {
     const { error } = await supabase.rpc("self_register_student", {
       p_school_id: registerFor.schoolId, p_full_name: regForm.full_name, p_class_name: regForm.class_name || null,
     });
-    if (error) { setRegError(error.message); return; } // e.g. bad school ID format, or that ID's already taken
-    // registered — now actually apply them
+    if (error) { setRegError(error.message); return; }
     const { data } = await supabase.rpc("apply_to_opportunity", { p_opportunity: registerFor.oppId, p_school_id: registerFor.schoolId });
     setStatus({ ...status, [registerFor.oppId]: data === "ok" ? "You're in! See you there." : String(data) });
     setRegisterFor(null);
@@ -72,8 +72,14 @@ export default function VolunteerPage() {
             <p className="text-[.7rem] font-extrabold uppercase tracking-widest text-blue-600 mt-1">{o.event_date}</p>
             <p className="text-sm text-blue-700 dark:text-blue-300 mt-2">{o.department_name} · {o.location}</p>
             {o.description && <p className="text-sm text-blue-700/70 dark:text-blue-300/70 mt-1">{o.description}</p>}
+
             <p className="text-xs font-bold uppercase text-blue-700/70 mt-3">
-              {o.applied}{o.slots ? ` / ${o.slots}` : ""} applied
+              {o.applied} applied
+              {o.slots != null && (
+                o.applied < o.slots
+                  ? ` · ${o.slots - o.applied} spots left`
+                  : " · at capacity — team will select volunteers"
+              )}
             </p>
 
             {o.applications_open ? (
