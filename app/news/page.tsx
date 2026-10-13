@@ -7,7 +7,7 @@ export default async function NewsPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-14">
-      <h2 className="text-4xl font-black uppercase text-blue-900 dark:text-blue-100">News</h2>
+      <h1 className="text-4xl font-black uppercase text-blue-900 dark:text-blue-100">News</h1>
       <p className="mt-2 text-blue-700 dark:text-blue-300">Past issues of the MRIS newsletter.</p>
 
       <div className="mt-10 grid gap-4">

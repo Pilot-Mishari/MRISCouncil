@@ -43,7 +43,7 @@
 .reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s ease; }
 .reveal.in-view { opacity: 1; transform: translateY(0); }
 
-.card-hover { transition: transform .25s ease, box-shadow .25s ease; }
+.card-hover { transition: transform .25s ease; }
 .card-hover:hover { transform: translateY(-5px); }
 
 .blob { animation: drift 10s ease-in-out infinite; }
@@ -55,6 +55,13 @@
   .hero-in, .reveal { animation: none !important; transition: none !important; opacity: 1 !important; transform: none !important; }
     .blob, .mobile-nav-panel { animation: none !important; }
 }
+
+/* native controls and scrollbars follow the site theme */
+html { color-scheme: light; }
+html.dark { color-scheme: dark; }
+
+/* visible keyboard focus everywhere (mouse clicks don't trigger it) */
+:focus-visible { outline: 2px solid var(--color-blue-500); outline-offset: 2px; }
 
 body {
   color: #1e3a8a;
@@ -74,8 +81,12 @@ input, select, textarea {
   color: #dbeafe; /* blue-100 */
 }
 input::placeholder, select::placeholder, textarea::placeholder {
-  color: rgba(30, 58, 138, 0.4);
+  color: rgba(30, 58, 138, 0.75);
 }
 .dark input::placeholder, .dark select::placeholder, .dark textarea::placeholder {
-  color: rgba(219, 234, 254, 0.4);
+  color: rgba(219, 234, 254, 0.6);
 }
+
+/* dropdown lists are drawn by the browser, so give the options explicit colours */
+select option, select optgroup { background-color: #ffffff; color: #1e3a8a; }
+.dark select option, .dark select optgroup { background-color: #0a0f1e; color: #dbeafe; }

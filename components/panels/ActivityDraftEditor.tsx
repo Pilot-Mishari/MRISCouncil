@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase/client";
+import { formatDateTime } from "@/lib/format";
+import { useFeedback } from "@/components/Feedback"
 import { clearDraft, loadDraft, saveDraft, type DraftData, type DraftFixture, type DraftTeam } from "@/lib/activity-drafts";
 
 /*
@@ -87,6 +89,7 @@ const badge = "text-[.6rem] font-bold uppercase tracking-wider px-1.5 py-0.5 rou
 
 export default function ActivityDraftEditor({ activityId }: { activityId: string }) {
   const [supabase] = useState(() => supabaseBrowser());
+  const { confirm } = useFeedback();
   const [live, setLive] = useState<DraftData>({ teams: [], fixtures: [] });
   const [draft, setDraft] = useState<DraftData>({ teams: [], fixtures: [] });
   const [ready, setReady] = useState(false);
@@ -170,10 +173,15 @@ export default function ActivityDraftEditor({ activityId }: { activityId: string
     updateDraft((d) => ({ ...d, teams: d.teams.map((t) => (t.id === teamId && t[key] !== n ? { ...t, [key]: n } : t)) }));
   };
 
-  const removeTeam = (team: DraftTeam) => {
+    const removeTeam = async (team: DraftTeam) => {
     const gone = draft.fixtures.filter((f) => f.home_team_id === team.id || f.away_team_id === team.id);
-    const extra = gone.length ? ` and its ${plural(gone.length, "fixture")}` : "";
-    if (!confirm(`Remove ${team.name}${extra} from the draft?`)) return;
+    const ok = await confirm({
+      title: `Remove ${team.name}?`,
+      message: gone.length ? `Its ${plural(gone.length, "fixture")} will be removed from the draft too.` : "It will be removed from the draft. Nothing changes publicly until you publish.",
+      confirmLabel: "Remove",
+      danger: true,
+    });
+    if (!ok) return;
     updateDraft((d) => {
       let teams = d.teams.filter((t) => t.id !== team.id);
       for (const f of gone) if (f.status === "completed") teams = applyResult(teams, f, -1); // undo the opponent's stats
@@ -218,8 +226,16 @@ export default function ActivityDraftEditor({ activityId }: { activityId: string
     setRescheduling(null);
   };
 
-  const deleteFixture = (f: DraftFixture) => {
-    if (f.status === "completed" && !confirm(`Delete this result (${teamName(f.home_team_id)} ${f.home_score}–${f.away_score} ${teamName(f.away_team_id)})? The points table will be adjusted.`)) return;
+    const deleteFixture = async (f: DraftFixture) => {
+    if (f.status === "completed") {
+      const ok = await confirm({
+        title: "Delete this result?",
+        message: `${teamName(f.home_team_id)} ${f.home_score}–${f.away_score} ${teamName(f.away_team_id)}. The points table will be adjusted.`,
+        confirmLabel: "Delete result",
+        danger: true,
+      });
+      if (!ok) return;
+    }
     updateDraft((d) => ({
       teams: f.status === "completed" ? applyResult(d.teams, f, -1) : d.teams,
       fixtures: d.fixtures.filter((x) => x.id !== f.id),
@@ -229,7 +245,8 @@ export default function ActivityDraftEditor({ activityId }: { activityId: string
 
   /* ---------- publish / discard ---------- */
   const discard = async () => {
-    if (!confirm("Throw away all draft changes and go back to what the public currently sees?")) return;
+        const ok = await confirm({ title: "Discard the draft?", message: "Everything goes back to what the public currently sees.", confirmLabel: "Discard draft", danger: true });
+    if (!ok) return;
     storedRef.current = false;
     await clearDraft(supabase, activityId, shared);
     setRescheduling(null);
@@ -239,7 +256,8 @@ export default function ActivityDraftEditor({ activityId }: { activityId: string
 
   const publish = async () => {
     if (!hasChanges || publishing) return;
-    if (!confirm(`Publish ${plural(changeCount, "change")}? The public points table and fixtures will update straight away.`)) return;
+        const ok = await confirm({ title: `Publish ${plural(changeCount, "change")}?`, message: "The public points table and fixtures update straight away.", confirmLabel: "Publish" });
+    if (!ok) return;
     setPublishing(true);
     setMessage(null);
 
@@ -352,8 +370,8 @@ export default function ActivityDraftEditor({ activityId }: { activityId: string
       <div className="bg-blue-50/60 dark:bg-blue-900/20 rounded-xl p-4">
         <h4 className="font-black uppercase text-xs mb-3">Teams & table</h4>
         <form onSubmit={addTeam} className="flex flex-wrap gap-2 mb-4">
-          <input placeholder="Team name" value={newTeam.name} onChange={(e) => setNewTeam({ ...newTeam, name: e.target.value })} className={`${field} flex-1 min-w-32`} />
-          <input placeholder="Group (optional)" value={newTeam.group_name} onChange={(e) => setNewTeam({ ...newTeam, group_name: e.target.value })} className={`${field} w-32`} />
+          <input placeholder="Team name" aria-label="Team name" value={newTeam.name} onChange={(e) => setNewTeam({ ...newTeam, name: e.target.value })} className={`${field} flex-1 min-w-32`} />
+          <input placeholder="Group (optional)" aria-label="Group" value={newTeam.group_name} onChange={(e) => setNewTeam({ ...newTeam, group_name: e.target.value })} className={`${field} w-32`} />
           <button disabled={publishing} className="bg-blue-900 text-white px-3 py-1.5 rounded-lg text-xs font-bold disabled:opacity-50">Add team</button>
         </form>
 
@@ -391,16 +409,16 @@ export default function ActivityDraftEditor({ activityId }: { activityId: string
       <div className="bg-blue-50/60 dark:bg-blue-900/20 rounded-xl p-4">
         <h4 className="font-black uppercase text-xs mb-3">Fixtures</h4>
         <form onSubmit={addFixture} className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
-          <select value={newFixture.home_team_id} onChange={(e) => setNewFixture({ ...newFixture, home_team_id: e.target.value })} className={field}>
+          <select aria-label="Home team" value={newFixture.home_team_id} onChange={(e) => setNewFixture({ ...newFixture, home_team_id: e.target.value })} className={field}>
             <option value="">Home team</option>
             {draft.teams.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
           </select>
-          <select value={newFixture.away_team_id} onChange={(e) => setNewFixture({ ...newFixture, away_team_id: e.target.value })} className={field}>
+          <select aria-label="Away team" value={newFixture.away_team_id} onChange={(e) => setNewFixture({ ...newFixture, away_team_id: e.target.value })} className={field}>
             <option value="">Away team</option>
             {draft.teams.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
           </select>
-          <input type="datetime-local" value={newFixture.match_date} onChange={(e) => setNewFixture({ ...newFixture, match_date: e.target.value })} className={field} />
-          <input placeholder="Pitch / location" value={newFixture.location} onChange={(e) => setNewFixture({ ...newFixture, location: e.target.value })} className={field} />
+          <input type="datetime-local" aria-label="Match date and time" value={newFixture.match_date} onChange={(e) => setNewFixture({ ...newFixture, match_date: e.target.value })} className={field} />
+          <input placeholder="Pitch / location" aria-label="Location" value={newFixture.location} onChange={(e) => setNewFixture({ ...newFixture, location: e.target.value })} className={field} />
           <button disabled={publishing} className="sm:col-span-2 bg-blue-900 text-white rounded-lg py-1.5 text-sm font-bold disabled:opacity-50">Add fixture</button>
         </form>
 
@@ -411,7 +429,7 @@ export default function ActivityDraftEditor({ activityId }: { activityId: string
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div>
                   <p className="text-sm font-bold">{teamName(f.home_team_id)} vs {teamName(f.away_team_id)} {draftBadge(fixtureDiff.state[f.id])}</p>
-                  <p className="text-xs text-blue-700/70">{new Date(f.match_date).toLocaleString()}{f.location ? ` · ${f.location}` : ""}</p>
+                  <p className="text-xs text-blue-700/70">{formatDateTime(f.match_date)}{f.location ? ` · ${f.location}` : ""}</p>
                 </div>
                 <div className="flex gap-3 text-xs font-bold">
                   {f.status !== "completed" && (

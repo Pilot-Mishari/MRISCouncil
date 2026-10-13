@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { supabaseServer } from "@/lib/supabase/server";
 import Reveal from "@/components/Reveal";
+import { formatDateTime } from "@/lib/format";
 
 export default async function Home() {
   const supabase = await supabaseServer();
@@ -92,7 +93,7 @@ export default async function Home() {
                   <Link key={f.id} href={`/activities/${f.activities?.id}`} className="card card-hover bar-left before:bg-warn p-5 block">
                     <p className="font-bold text-sm">{f.home_team?.name} vs {f.away_team?.name}</p>
                     <p className="text-xs text-blue-700/70 dark:text-blue-300/70 mt-1">
-                      {new Date(f.match_date).toLocaleString()}{f.location ? ` · ${f.location}` : ""}
+                      {formatDateTime(f.match_date)}{f.location ? ` · ${f.location}` : ""}
                     </p>
                     <p className="text-[.65rem] font-bold uppercase tracking-widest text-blue-600 mt-2">{f.activities?.title}</p>
                   </Link>

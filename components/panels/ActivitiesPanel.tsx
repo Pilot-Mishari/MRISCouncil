@@ -3,9 +3,11 @@ import { useEffect, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase/client";
 import { clearDraft } from "@/lib/activity-drafts";
 import ActivityDraftEditor from "./ActivityDraftEditor";
+import { useFeedback } from "@/components/Feedback";
 
 export default function ActivitiesPanel() {
   const supabase = supabaseBrowser();
+  const { confirm, notify } = useFeedback();
   const [activities, setActivities] = useState<any[]>([]);
   const [openId, setOpenId] = useState<string | null>(null);
   const [newActivity, setNewActivity] = useState({ title: "", type: "", description: "" });
@@ -28,7 +30,7 @@ export default function ActivitiesPanel() {
     const { error } = await supabase.from("activities").insert(payload);
     if (error) {
       console.error("Add activity failed:", error);
-      alert(error.message);
+      notify(error.message, "error");
       return;
     }
 
@@ -40,16 +42,24 @@ export default function ActivitiesPanel() {
     const { error } = await supabase.from("activities").update({ status }).eq("id", id);
     if (error) {
       console.error("Update status failed:", error);
-      alert(error.message);
+      notify(error.message, "error");
       return;
     }
     refresh();
   };
-  const removeActivity = async (id: string) => {
+  const removeActivity = async (a: any) => {
+    const ok = await confirm({
+      title: `Delete “${a.title}”?`,
+      message: "It will disappear from the public site. This can’t be undone.",
+      confirmLabel: "Delete activity",
+      danger: true,
+    });
+    if (!ok) return;
+    const id = a.id;
     const { error } = await supabase.from("activities").delete().eq("id", id);
     if (error) {
       console.error("Delete activity failed:", error);
-      alert(error.message);
+      notify(error.message, "error");
       return;
     }
     await clearDraft(supabase, id, true); // drop any unpublished draft for this activity
@@ -86,7 +96,7 @@ export default function ActivitiesPanel() {
                 <button onClick={() => toggleDetail(a.id)} className="text-xs font-bold border rounded-lg px-3 py-1.5">
                   {openId === a.id ? "Hide" : "Manage"}
                 </button>
-                <button onClick={() => removeActivity(a.id)} className="text-xs font-bold text-bad">Delete</button>
+                <button onClick={() => removeActivity(a)} className="text-xs font-bold text-bad">Delete</button>
               </div>
             </div>
 

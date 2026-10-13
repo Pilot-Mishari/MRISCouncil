@@ -7,7 +7,7 @@ export default async function ActivitiesPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-14">
-      <h2 className="text-4xl font-black uppercase text-blue-900 dark:text-blue-100">Activities</h2>
+      <h1 className="text-4xl font-black uppercase text-blue-900 dark:text-blue-100">Activities</h1>
       <p className="mt-2 text-blue-700 dark:text-blue-300">Tournaments, leagues, and everything else going on right now.</p>
 
       <div className="mt-10 grid gap-4">

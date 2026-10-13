@@ -26,7 +26,7 @@ export default function ClubsPage() {
     <div className="max-w-4xl mx-auto px-4 py-14">
       <div className="flex flex-wrap justify-between items-end gap-3">
         <div>
-          <h2 className="text-4xl font-black uppercase text-blue-900 dark:text-blue-100">Clubs</h2>
+          <h1 className="text-4xl font-black uppercase text-blue-900 dark:text-blue-100">Clubs</h1>
           <p className="mt-2 text-blue-700 dark:text-blue-300">Every club running at MRIS right now.</p>
         </div>
         <button onClick={() => setShowForm(!showForm)} className="bg-blue-900 text-white px-5 py-2.5 rounded-xl font-bold text-sm">
@@ -37,13 +37,12 @@ export default function ClubsPage() {
       {showForm && (
         <form onSubmit={submit} className="card p-6 mt-6 space-y-3">
           <h3 className="font-black uppercase text-sm">Apply to start a club</h3>
-          <input placeholder="Club name" required value={form.club_name} onChange={(e) => setForm({ ...form, club_name: e.target.value })} className="w-full border rounded-xl px-3 py-2 bg-transparent" />
-          <input placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full border rounded-xl px-3 py-2 bg-transparent" />
-          <input placeholder="Founder (your name)" required value={form.founder} onChange={(e) => setForm({ ...form, founder: e.target.value })} className="w-full border rounded-xl px-3 py-2 bg-transparent" />
-          <input placeholder="Co-founder (optional)" value={form.co_founder} onChange={(e) => setForm({ ...form, co_founder: e.target.value })} className="w-full border rounded-xl px-3 py-2 bg-transparent" />
-          <input placeholder="Your school ID" value={form.applicant_school_id} onChange={(e) => setForm({ ...form, applicant_school_id: e.target.value })} className="w-full border rounded-xl px-3 py-2 bg-transparent" />
-          <input placeholder="Contact (email or phone)" value={form.contact} onChange={(e) => setForm({ ...form, contact: e.target.value })} className="w-full border rounded-xl px-3 py-2 bg-transparent" />
-          <button className="bg-blue-900 text-white px-5 py-2.5 rounded-xl font-bold text-sm">Submit application</button>
+          <input placeholder="Club name" aria-label="Club name" autoComplete="off" required value={form.club_name} onChange={(e) => setForm({ ...form, club_name: e.target.value })} className="w-full border rounded-xl px-3 py-2 bg-transparent" />
+          <input placeholder="Description" aria-label="Description" autoComplete="off" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full border rounded-xl px-3 py-2 bg-transparent" />
+          <input placeholder="Founder (your name)" aria-label="Founder (your name)" autoComplete="name" required value={form.founder} onChange={(e) => setForm({ ...form, founder: e.target.value })} className="w-full border rounded-xl px-3 py-2 bg-transparent" />
+          <input placeholder="Co-founder (optional)" aria-label="Co-founder (optional)" autoComplete="off" value={form.co_founder} onChange={(e) => setForm({ ...form, co_founder: e.target.value })} className="w-full border rounded-xl px-3 py-2 bg-transparent" />
+          <input placeholder="Your school ID" aria-label="Your school ID" autoComplete="off" value={form.applicant_school_id} onChange={(e) => setForm({ ...form, applicant_school_id: e.target.value })} className="w-full border rounded-xl px-3 py-2 bg-transparent" />
+          <input placeholder="Contact (email or phone)" aria-label="Contact (email or phone)" autoComplete="off" value={form.contact} onChange={(e) => setForm({ ...form, contact: e.target.value })} className="w-full border rounded-xl px-3 py-2 bg-transparent" />
           {status && <p className="text-sm text-blue-700 dark:text-blue-300">{status}</p>}
         </form>
       )}

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { supabaseServer } from "@/lib/supabase/server";
+import { formatDateOnly } from "@/lib/format";
 
 type PhotoOfWeek = {
   id: string;
@@ -36,13 +37,13 @@ export default async function MediaPage() {
         {currentPhoto ? (
           <article className="card overflow-hidden">
             <div className="relative w-full h-96 bg-blue-100 dark:bg-blue-900/30">
-              <img src={currentPhoto.image_url} alt={currentPhoto.caption} className="w-full h-full object-cover" />
+              <img src={currentPhoto.image_url} alt={currentPhoto.caption} fetchPriority="high" decoding="async" className="w-full h-full object-cover" />
             </div>
             <div className="p-8">
               <p className="text-xs font-bold tracking-[.24em] uppercase text-blue-600 mb-2">Photo of the week</p>
               <h2 className="text-2xl font-black text-blue-900 dark:text-blue-100 mb-3">{currentPhoto.caption}</h2>
               <p className="text-sm text-blue-700 dark:text-blue-300">
-                Week of {new Date(currentPhoto.week_date).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
+                Week of {formatDateOnly(currentPhoto.week_date)}
               </p>
             </div>
           </article>
@@ -60,9 +61,10 @@ export default async function MediaPage() {
         <p className="text-sm text-blue-700 dark:text-blue-300 mb-6 max-w-2xl mx-auto">
           Browse photos and videos from the entire school year, organized by month and event.
         </p>
-       <a href="https://drive.google.com/drive/folders/1BV8phMxjTfxAQclXmXiuI-sx_eWfRrZo" target="_blank" rel="noopener noreferrer">
-  Open Google Drive →
-</a>
+               <a href="https://drive.google.com/drive/folders/1BV8phMxjTfxAQclXmXiuI-sx_eWfRrZo" target="_blank" rel="noopener noreferrer"
+          className="inline-block bg-blue-900 text-white px-8 py-3.5 rounded-xl font-bold text-sm uppercase tracking-wider hover:bg-blue-800">
+          Open Google Drive →
+        </a>
       </div>
     </div>
   );

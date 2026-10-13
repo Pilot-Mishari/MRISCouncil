@@ -24,7 +24,7 @@ export default function MobileNav({ links }: { links: NavLink[] }) {
     };
   }, [open]);
 
-  const bar = "absolute left-0 h-0.5 w-5 rounded-full bg-current transition-all duration-200";
+  const bar = "absolute left-0 h-0.5 w-5 rounded-full bg-current transition-[transform,opacity,top] duration-200";
 
   return (
     <>
@@ -52,7 +52,7 @@ export default function MobileNav({ links }: { links: NavLink[] }) {
             ref={panelRef}
             tabIndex={-1}
             aria-label="Main menu"
-            className="mobile-nav-panel fixed right-0 top-[69px] bottom-0 z-40 w-64 max-w-[80vw] overflow-y-auto bg-white dark:bg-[#0a0f1e] border-l border-blue-100 dark:border-blue-900 shadow-2xl p-3 outline-none flex flex-col gap-1"
+            className="mobile-nav-panel fixed right-0 top-[69px] bottom-0 z-40 w-64 max-w-[80vw] overflow-y-auto overscroll-contain bg-white dark:bg-[#0a0f1e] border-l border-blue-100 dark:border-blue-900 shadow-2xl p-3 outline-none flex flex-col gap-1"
           >
             {links.map((l) => {
               const active = l.href === "/" ? pathname === "/" : pathname.startsWith(l.href);

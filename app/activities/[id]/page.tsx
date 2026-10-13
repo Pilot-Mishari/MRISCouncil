@@ -15,7 +15,7 @@ export default async function ActivityDetail({ params }: { params: Promise<{ id:
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-14">
-      <h2 className="text-3xl font-black uppercase text-blue-900 dark:text-blue-100">{activity.title}</h2>
+      <h1 className="text-3xl font-black uppercase text-blue-900 dark:text-blue-100">{activity.title}</h1>
       <p className="text-xs text-blue-600 font-bold uppercase tracking-widest mt-1">{activity.type} · {activity.status}</p>
       {activity.description && <p className="mt-4 text-blue-700 dark:text-blue-300">{activity.description}</p>}
 
