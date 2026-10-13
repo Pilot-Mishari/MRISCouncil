@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ThemeToggle from "./ThemeToggle";
+import MobileNav from "./MobileNav";
 
 const LINKS = [
   { href: "/", label: "Home" },
@@ -28,6 +29,7 @@ export default function Header() {
         <div className="flex items-center gap-1">
           <Link href="/restricted" className="w-9 h-9 rounded-lg grid place-items-center text-blue-900 dark:text-blue-100 hover:bg-blue-50 dark:hover:bg-blue-900/30" title="Club login">🔒</Link>
           <ThemeToggle />
+          <MobileNav links={LINKS} />
         </div>
       </div>
     </header>

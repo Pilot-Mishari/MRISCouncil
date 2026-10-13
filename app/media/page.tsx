@@ -30,7 +30,6 @@ export default async function MediaPage() {
             Photos, videos, and memories from MRIS events and activities throughout the year.
           </p>
         </div>
-        <Link href="/restricted" className="text-sm font-bold text-blue-700">Staff login →</Link>
       </div>
 
       <div className="mt-12 grid gap-10">
