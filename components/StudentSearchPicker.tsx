@@ -1,11 +1,13 @@
 "use client";
 import { useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase/client";
+import { useFeedback } from "@/components/Feedback"
 
 type Student = { id: string; school_id: string; full_name: string; class_name: string | null };
 
 export default function StudentSearchPicker({ onSelect }: { onSelect: (s: Student) => void }) {
   const supabase = supabaseBrowser();
+  const { notify } = useFeedback();
   const [q, setQ] = useState("");
   const [results, setResults] = useState<Student[]>([]);
   const [searched, setSearched] = useState(false);
@@ -52,7 +54,7 @@ export default function StudentSearchPicker({ onSelect }: { onSelect: (s: Studen
       school_id: form.school_id.trim(), full_name: form.full_name.trim(),
       class_name: form.class_name.trim() || null,
     }).select().single();
-    if (error) { alert(error.message); return; }
+    if (error) { notify(error.message, "error"); return; }
     pick(data as Student);
     setShowAdd(false);
   };

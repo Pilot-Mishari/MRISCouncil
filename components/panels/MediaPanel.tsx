@@ -149,6 +149,10 @@ export default function MediaPanel() {
                   <img
                     src={photo.image_url}
                     alt={photo.caption}
+                    width={64}
+                    height={64}
+                    loading="lazy"
+                    decoding="async"
                     className="w-16 h-16 rounded-lg object-cover bg-blue-100 dark:bg-blue-900/30"
                   />
                   <div className="flex-1">

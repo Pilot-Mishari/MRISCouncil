@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { formatDate, formatDateTime } from "@/lib/format";  
 
 export default function ActivityTabs({ teams, upcoming, past }: { teams: any[]; upcoming: any[]; past: any[] }) {
   const [tab, setTab] = useState<"results" | "fixtures" | "table">("fixtures");
@@ -35,7 +36,7 @@ export default function ActivityTabs({ teams, upcoming, past }: { teams: any[]; 
     <div className="mt-10">
       <div className="flex gap-2 mb-6">
         {(["fixtures", "results", "table"] as const).map((t) => (
-          <button key={t} onClick={() => setTab(t)}
+          <button key={t} onClick={() => setTab(t)} aria-pressed={tab === t}
             className={`text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-lg ${tab === t ? "bg-blue-900 text-white" : "border border-blue-100 dark:border-blue-900 text-blue-700 dark:text-blue-300"}`}>
             {t === "table" ? "Points table" : t}
           </button>
@@ -47,7 +48,7 @@ export default function ActivityTabs({ teams, upcoming, past }: { teams: any[]; 
           {upcoming.map((f) => (
             <div key={f.id} className="card p-4">
               <p className="font-bold text-sm">{teamName(f.home_team_id)} vs {teamName(f.away_team_id)}</p>
-              <p className="text-xs text-blue-700/70">{new Date(f.match_date).toLocaleString()}{f.location ? ` · ${f.location}` : ""}</p>
+              <p className="text-xs text-blue-700/70">{formatDateTime(f.match_date)}{f.location ? ` · ${f.location}` : ""}</p>
             </div>
           ))}
           {!upcoming.length && <p className="text-sm text-blue-700/70">No upcoming fixtures.</p>}
@@ -60,7 +61,7 @@ export default function ActivityTabs({ teams, upcoming, past }: { teams: any[]; 
             <div key={f.id} className="card p-4 flex justify-between items-center">
               <div>
                 <p className="font-bold text-sm">{teamName(f.home_team_id)} vs {teamName(f.away_team_id)}</p>
-                <p className="text-xs text-blue-700/70">{new Date(f.match_date).toLocaleDateString()}</p>
+                <p className="text-xs text-blue-700/70">{formatDateTime(f.match_date)}</p>
               </div>
               <p className="font-black text-blue-600">{f.home_score} – {f.away_score}</p>
             </div>

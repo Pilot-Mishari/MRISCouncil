@@ -9,7 +9,7 @@ export default async function NewsDetail({ params }: { params: Promise<{ id: str
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-14">
-      <h2 className="text-3xl font-black uppercase text-blue-900 dark:text-blue-100">{paper.title}</h2>
+      <h1 className="text-3xl font-black uppercase text-blue-900 dark:text-blue-100">{paper.title}</h1>
       <p className="text-xs text-blue-700/70 dark:text-blue-300/70 mt-1">Published {paper.published_at?.slice(0, 10)}</p>
       <div className="mt-8 text-blue-900 dark:text-blue-100 whitespace-pre-wrap leading-relaxed">{paper.content}</div>
     </div>

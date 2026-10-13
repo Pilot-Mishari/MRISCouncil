@@ -13,7 +13,7 @@ export default function TeamPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-14">
-      <h2 className="text-4xl font-black uppercase text-blue-900 dark:text-blue-100">Meet Our Team</h2>
+      <h1 className="text-4xl font-black uppercase text-blue-900 dark:text-blue-100">Meet Our Team</h1>
       <p className="mt-2 text-blue-700 dark:text-blue-300">The students who represent your interests and run MRIS's community programmes.</p>
 
       <h3 className="mt-12 font-black uppercase text-sm text-blue-700 dark:text-blue-300 tracking-widest">Leadership</h3>
@@ -34,7 +34,7 @@ export default function TeamPage() {
       <div className="mt-4 grid gap-3">
         {departments.map((d) => (
           <div key={d.name} className="card p-5">
-            <button onClick={() => setOpen(open === d.name ? null : d.name)} className="w-full flex justify-between items-center">
+            <button onClick={() => setOpen(open === d.name ? null : d.name)} aria-expanded={open === d.name} className="w-full flex justify-between items-center">
               <div className="flex items-center gap-3">
                 <div className="flex -space-x-2">
                   {d.heads.map((h) => <Avatar key={h.name} name={h.name} size="w-9 h-9 text-xs border-2 border-white dark:border-[#0a0f1e]" />)}
@@ -46,13 +46,16 @@ export default function TeamPage() {
 
             {open === d.name && (
               <div className="mt-4 pt-6 border-t border-blue-100 dark:border-blue-900">
-                {/* Heads: one on the left, one on the right */}
+                {/* Heads: one on the left, one on the right. Descriptions only show here, when expanded. */}
                 <div className="grid grid-cols-2 items-start">
                   {d.heads.map((h) => (
                     <div key={h.name} className="flex flex-col items-center text-center first:justify-self-start first:ml-2 justify-self-center">
                       <Avatar name={h.name} size="w-20 h-20 sm:w-24 sm:h-24 text-2xl" />
                       <p className="mt-3 font-black text-sm">{h.name}</p>
                       <p className="text-xs font-bold uppercase tracking-widest text-blue-600">{h.role}</p>
+                      {h.description && (
+                        <p className="mt-2 max-w-[14rem] text-xs text-blue-700/70 dark:text-blue-300/70">{h.description}</p>
+                      )}
                     </div>
                   ))}
                 </div>
