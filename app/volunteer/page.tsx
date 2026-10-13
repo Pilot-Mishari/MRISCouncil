@@ -138,7 +138,7 @@ export default function VolunteerPage() {
 
       {registerFor && (
         <div className="fixed inset-0 z-50 overscroll-contain bg-black/40 flex items-center justify-center px-4" onClick={() => setRegisterFor(null)}>
-          <div role="dialog" aria-modal="true" aria-labelledby="register-title" className="card bg-white dark:bg-[#0a0f1e] p-6 w-full max-w-sm" onClic={(e) => e.stopPropagation()}>
+                    <div role="dialog" aria-modal="true" aria-labelledby="register-title" className="card bg-white dark:bg-[#0a0f1e] p-6 w-full max-w-sm" onClick={(e) => e.stopPropagation()}>
             <h3 id="register-title" className="font-black uppercase text-sm text-blue-900 dark:text-blue-100">We couldn’t find that ID</h3>
             <p className="text-xs text-blue-700/70 dark:text-blue-300/70 mt-1 mb-4">First time volunteering? Set up your record.</p>
             <form onSubmit={register} className="space-y-3">
