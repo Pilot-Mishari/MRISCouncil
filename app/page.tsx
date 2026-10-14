@@ -3,12 +3,12 @@
 import Link from "next/link";
 import { supabaseServer } from "@/lib/supabase/server";
 import Reveal from "@/components/Reveal";
-import { formatDateTime } from "@/lib/format";
+import { formatDateOnly, formatDateTime } from "@/lib/format";
 
 export default async function Home() {
   const supabase = await supabaseServer();
 
-  const [{ data: latestNews }, { data: upcoming }, { data: results }] = await Promise.all([
+  const [{ data: latestNews }, { data: upcoming }, { data: results }, { data: photo }] = await Promise.all([
     supabase
       .from("news_papers")
       .select("*")
@@ -28,11 +28,19 @@ export default async function Home() {
       .eq("status", "completed")
       .order("match_date", { ascending: false })
       .limit(3),
+    supabase
+      .from("photos_of_week")
+      .select("*")
+      .eq("published", true)
+      .order("week_date", { ascending: false })
+      .limit(1)
+      .maybeSingle(),
   ]);
 
   return (
     <div>
-      <section className="relative min-h-[calc(100vh-68px)] flex items-center justify-center text-center px-4 overflow-hidden">
+      {/* with a photo of the week, the hero is a little shorter so the top of the photo peeks in at the bottom of the screen */}
+      <section className={`relative ${photo ? "min-h-[calc(100vh-68px-9rem)]" : "min-h-[calc(100vh-68px)]"} flex items-center justify-center text-center px-4 overflow-hidden`}>
         <div aria-hidden className="blob pointer-events-none absolute -top-20 -left-20 w-[420px] h-[420px] rounded-full bg-blue-400/20 blur-3xl" />
         <div aria-hidden className="blob pointer-events-none absolute -bottom-24 -right-10 w-[380px] h-[380px] rounded-full bg-blue-600/15 blur-3xl" style={{ animationDelay: "3s" }} />
 
@@ -51,8 +59,42 @@ export default async function Home() {
               View opportunities
             </Link>
           </div>
+          {photo && (
+            <a href="#photo-of-the-week" className="hero-in mt-10 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-100" style={{ animationDelay: "450ms" }}>
+              This week&apos;s photo
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M6 13l6 6 6-6" /></svg>
+            </a>
+          )}
         </div>
       </section>
+
+      {photo && (
+        <section id="photo-of-the-week" className="max-w-5xl mx-auto px-4 pt-6 pb-20 scroll-mt-20">
+          <Reveal>
+            <p className="text-center text-xs font-bold tracking-[.24em] uppercase text-blue-600 mb-3">This Week</p>
+            <h2 className="text-center text-3xl font-black uppercase text-blue-900 dark:text-blue-100 mb-8">Photo of the Week</h2>
+            <Link href="/media" className="card group block overflow-hidden">
+              <div className="aspect-video w-full overflow-hidden bg-blue-100 dark:bg-blue-900/30">
+                <img
+                  src={photo.image_url}
+                  alt={photo.caption}
+                  decoding="async"
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                />
+              </div>
+              <div className="flex flex-wrap items-end justify-between gap-3 p-6">
+                <div>
+                  <h3 className="text-xl font-black text-blue-900 dark:text-blue-100">{photo.caption}</h3>
+                  <p className="mt-1 text-sm text-blue-700 dark:text-blue-300">Week of {formatDateOnly(photo.week_date)}</p>
+                </div>
+                <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-300">
+                  More on Media <span aria-hidden="true" className="inline-block transition-transform group-hover:translate-x-1">→</span>
+                </span>
+              </div>
+            </Link>
+          </Reveal>
+        </section>
+      )}
 
       <section className="max-w-5xl mx-auto px-4 py-20">
         <Reveal>
