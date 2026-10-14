@@ -21,18 +21,18 @@ export const departments: { name: string; heads: Member[]; members: Member[] }[]
     heads: [{ name: "Syed Mubashir Hussain", role: "Head 1", description: LOREM }, { name: "Omar Fahim Syed", role: "Head 2", description: "1000 interests only 1 lifetime" }],
     members: [{ name: "Bilal Bahaa Eddin Al Hakeem", role: "Co Head" }, { name: "Mohammed Abdullah Alkhaibari", role: "Member" }] },
   { name: "Finance",
-    heads: [{ name: "Ghassan Amir Elhassan", role: "Head 1", description: LOREM }, { name: "Muhammad Humayun Naveed", role: "Head 2", description: "I’m passionate about finance, taking initiative, and making a difference in my school community." }],
+    heads: [{ name: "Ghassan Amir Elhassan", role: "Head 1", description: LOREM }, { name: "Muhammad Humayun Naveed", role: "Head 2", description: "I handle the finances so if you end up doing graduation in your maths class don’t blame me" }],
     members: [{ name: "Faris Thamer Alquthami", role: "Co Head" }, { name: "Talal Muffareh Nahari", role: "Member" }] },
   { name: "Volunteering",
     heads: [{ name: "Hassan Husham Hassan Mohammed", role: "Head 1", description: LOREM }, { name: "Ahmed Alaa", role: "Head 2", description: LOREM }],
     members: [{ name: "Ahmad Yasser Alsaqabi", role: "Co Head" }, { name: "Razyn Alharbi", role: "Member" }] },
   { name: "Media and PR",
-    heads: [{ name: "Fayed Abdulkareem", role: "Head 1", description: "Fade away fade away young man fade awayyy" }, { name: "Ayaan Fahad", role: "Head 2", description: LOREM }],
+    heads: [{ name: "Fayed Abdulkareem", role: "Head 1", description: "Fade away fade away young man fade awayyy" }, { name: "Ayaan Fahad", role: "Head 2", description: "Theres a reason they call me the Architect of Memories" }],
     members: [{ name: "Abdulrahman Faisal Alturki", role: "Co Head" }, { name: "Ahmed Jamiel", role: "Co Head" }, { name: "Abdulkareem Abdul Rahman Al Eissa", role: "Member" }] },
   { name: "Newsletter",
     heads: [{ name: "Abdullah Habibullah Chaudhary", role: "Editor in Chief", description: LOREM }],
     members: [
-      { name: "Mohammed Nagi Omar", role: "Senior Editor" },
+      { name: "Mohammed Nagi Omar", role: "We find news we make news weekly news" },
       { name: "Mohammad Bander", role: "Senior Reporter" },
       { name: "Aley Basem Osama", role: "Senior Reporter" },
       { name: "Abdulaziz Osama Alhamad", role: "Junior Writer" },
@@ -41,8 +41,9 @@ export const departments: { name: string; heads: Member[]; members: Member[] }[]
     heads: [{ name: "Ghassan Yousef Alshayeb", role: "Head 1", description: LOREM }, { name: "Ammar Anwar", role: "Head 2", description: "I take the pictures, so if you look bad in the yearbook, that's between you and the lighting" }],
     members: [
       { name: "Hamad Watban M Altabayanawy", role: "Co Head" },
-      { name: "Mustafa Mohammed Farook Badiuddin", role: "Member" },
-      { name: "Nawaf Ramy Alduraihem", role: "Member" },
+      { name: "Rayan Farhan", role: "Member" },
+      { name: "Hasaan Faisal", role: "Member" },
+      { name: "Mohammad Abdullah Al Mana", role: "Member" },
     ] },
 ];
 

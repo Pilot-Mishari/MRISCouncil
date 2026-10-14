@@ -33,6 +33,11 @@
   to { transform: translateX(0); }
 }
 
+@keyframes sheet-in {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 @keyframes drift {
   0%, 100% { transform: translate(0, 0) scale(1); }
   50% { transform: translate(20px, -30px) scale(1.08); }
@@ -49,11 +54,12 @@
 .blob { animation: drift 10s ease-in-out infinite; }
 
 .mobile-nav-panel { animation: slide-in-right .22s ease-out; }
+.sheet-in { animation: sheet-in .25s ease-out; }
 
 /* respects people who've asked their OS to reduce motion */
 @media (prefers-reduced-motion: reduce) {
   .hero-in, .reveal { animation: none !important; transition: none !important; opacity: 1 !important; transform: none !important; }
-    .blob, .mobile-nav-panel { animation: none !important; }
+  .blob, .mobile-nav-panel, .sheet-in { animation: none !important; }
 }
 
 /* native controls and scrollbars follow the site theme */
