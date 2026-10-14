@@ -38,7 +38,7 @@ export const departments: { name: string; heads: Member[]; members: Member[] }[]
       { name: "Abdulaziz Osama Alhamad", role: "Junior Writer" },
     ] },
   { name: "Photography",
-    heads: [{ name: "Ghassan Yousef Alshayeb", role: "Head 1", description: LOREM }, { name: "Ammar Anwar", role: "Head 2", description: LOREM }],
+    heads: [{ name: "Ghassan Yousef Alshayeb", role: "Head 1", description: LOREM }, { name: "Ammar Anwar", role: "Head 2", description: "I take the pictures, so if you look bad in the yearbook, that's between you and the lighting" }],
     members: [
       { name: "Hamad Watban M Altabayanawy", role: "Co Head" },
       { name: "Mustafa Mohammed Farook Badiuddin", role: "Member" },
