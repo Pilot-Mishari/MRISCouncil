@@ -21,7 +21,7 @@ export const departments: { name: string; heads: Member[]; members: Member[] }[]
     heads: [{ name: "Syed Mubashir Hussain", role: "Head 1", description: LOREM }, { name: "Omar Fahim Syed", role: "Head 2", description: "1000 interests only 1 lifetime" }],
     members: [{ name: "Bilal Bahaa Eddin Al Hakeem", role: "Co Head" }, { name: "Mohammed Abdullah Alkhaibari", role: "Member" }] },
   { name: "Finance",
-    heads: [{ name: "Ghassan Amir Elhassan", role: "Head 1", description: LOREM }, { name: "Muhammad Humayun Naveed", role: "Head 2", description: "I’m passionate about finance, taking initiative, and making a difference in my school community." }],
+    heads: [{ name: "Ghassan Amir Elhassan", role: "Head 1", description: LOREM }, { name: "Muhammad Humayun Naveed", role: "Head 2", description: "I handle the finances so if you end up doing graduation in your maths class don’t blame me" }],
     members: [{ name: "Faris Thamer Alquthami", role: "Co Head" }, { name: "Talal Muffareh Nahari", role: "Member" }] },
   { name: "Volunteering",
     heads: [{ name: "Hassan Husham Hassan Mohammed", role: "Head 1", description: LOREM }, { name: "Ahmed Alaa", role: "Head 2", description: LOREM }],
