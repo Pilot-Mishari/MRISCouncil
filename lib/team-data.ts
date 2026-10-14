@@ -32,7 +32,7 @@ export const departments: { name: string; heads: Member[]; members: Member[] }[]
   { name: "Newsletter",
     heads: [{ name: "Abdullah Habibullah Chaudhary", role: "Editor in Chief", description: LOREM }],
     members: [
-      { name: "Mohammed Nagi Omar", role: "Senior Editor" },
+      { name: "Mohammed Nagi Omar", role: "We find news we make news weekly news" },
       { name: "Mohammad Bander", role: "Senior Reporter" },
       { name: "Aley Basem Osama", role: "Senior Reporter" },
       { name: "Abdulaziz Osama Alhamad", role: "Junior Writer" },
