@@ -13,6 +13,13 @@ type PhotoOfWeek = {
 
 const supabase = supabaseBrowser();
 
+const toDirectImageUrl = (input: string) => {
+  const url = input.trim();
+  if (!/^https?:\/\/(drive|docs)\.google\.com\//.test(url)) return url;
+  const id = url.match(/\/d\/([\w-]{20,})/)?.[1] ?? url.match(/[?&]id=([\w-]{20,})/)?.[1];
+  return id ? `https://drive.google.com/thumbnail?id=${id}&sz=w1600` : url;
+};
+
 export default function MediaPanel() {
   const [photos, setPhotos] = useState<PhotoOfWeek[]>([]);
   const [imageUrl, setImageUrl] = useState("");
@@ -20,6 +27,8 @@ export default function MediaPanel() {
   const [weekDate, setWeekDate] = useState("");
   const [published, setPublished] = useState(true);
   const [message, setMessage] = useState("");
+  const [previewFailed, setPreviewFailed] = useState(false);
+  const resolvedUrl = toDirectImageUrl(imageUrl);
 
   const loadPhotos = useCallback(async () => {
     const { data } = await supabase
@@ -44,7 +53,7 @@ export default function MediaPanel() {
     }
 
     const { error } = await supabase.from("photos_of_week").insert({
-      image_url: imageUrl,
+      image_url: resolvedUrl,
       caption,
       week_date: new Date(weekDate).toISOString(),
       published,
@@ -89,16 +98,38 @@ export default function MediaPanel() {
       <form onSubmit={addPhoto} className="card p-6 space-y-3">
         <h3 className="font-black uppercase text-blue-900 dark:text-blue-100 mb-4">Add Photo of the Week</h3>
 
-        <label className="text-xs font-bold uppercase">
+                <label className="text-xs font-bold uppercase">
           Image URL
           <input
             required
             className={`${fieldClass} mt-1`}
             value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
-            placeholder="https://example.com/photo.jpg"
+            onChange={(e) => { setImageUrl(e.target.value); setPreviewFailed(false); }}
+            placeholder="Google Drive share link or https://example.com/photo.jpg"
           />
+          <span className="mt-1 block text-[.7rem] font-normal normal-case text-blue-700/70 dark:text-blue-300/70">
+            For Google Drive, set the photo to &quot;Anyone with the link&quot; (Viewer), then paste its share link.
+          </span>
         </label>
+
+        {resolvedUrl && (
+          <div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              key={resolvedUrl}
+              src={resolvedUrl}
+              alt="Preview of the photo"
+              onError={() => setPreviewFailed(true)}
+              onLoad={() => setPreviewFailed(false)}
+              className={previewFailed ? "hidden" : "h-32 rounded-lg object-cover bg-blue-100 dark:bg-blue-900/30"}
+            />
+            {previewFailed && (
+              <p role="alert" className="text-xs font-bold text-bad">
+                This link doesn&apos;t load as a picture. For Drive, check that sharing is set to &quot;Anyone with the link&quot;.
+              </p>
+            )}
+          </div>
+        )}
 
         <label className="text-xs font-bold uppercase">
           Caption
