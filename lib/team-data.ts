@@ -5,7 +5,7 @@ const LOREM = "This person decided to be boring";
 
 export const leadership: Member[] = [
   { name: "Arar Mutlag Alajmi", role: "President", bio: LOREM },
-  { name: "Rayyan Nawwab", role: "Vice President", bio: "I bring all our departments together, keep everyone working in sync, prioritising both fun and actually getting things done." },
+  { name: "Rayyan Nawwab", role: "Vice President", bio: "I keep the departments in sync, make sure we have fun, and blame arar if literally anything goes wrong" },
   { name: "Omar Al-Ajjuri", role: "Events Coordinator", bio: "I run it, ask me" },
   { name: "Khalid Walid Alismail", role: "Advisor", bio: LOREM },
 ];
